@@ -12,7 +12,7 @@ require("./model/FeedbackandCompailent");
 require("./model/Vehicles");
 require("./model/Challan");
 const app =express();
-const port=7777;
+const PORT=process.env.PORT || 7777
 app.use(cors());
 const engines=require('consolidate');
 app.engine('ejs',engines.ejs);
@@ -76,6 +76,6 @@ app.use((error,req,res,next)=>{
 
 
 
-app.listen(process.env.PORT || port,function(){
+app.listen(PORT,function(){
     console.log("Server is running")
 })
