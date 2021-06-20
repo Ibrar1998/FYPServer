@@ -11,19 +11,19 @@ require("./model/Register");
 require("./model/FeedbackandCompailent");
 require("./model/Vehicles");
 require("./model/Challan");
-const App =express();
+const app =express();
 const port=7777;
-App.use(cors());
+app.use(cors());
 const engines=require('consolidate');
-App.engine('ejs',engines.ejs);
-App.set('views','./views');
-App.set('view engine','ejs');
+app.engine('ejs',engines.ejs);
+app.set('views','./views');
+app.set('view engine','ejs');
  
 //  image access
-App.use(express.static(__dirname + '/userImage/'));
-App.use(bodyParser.json())
+app.use(express.static(__dirname + '/userImage/'));
+app.use(bodyParser.json())
 .use(morgan())
-App.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({extended:true}));
 
 var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', "*");
@@ -32,32 +32,32 @@ var allowCrossDomain = function(req, res, next) {
     next();
 }
 
-App.use(allowCrossDomain);
+app.use(allowCrossDomain);
 
 
 
 
 
 
- App.use("/",require("./router/register"));
- App.use('/login',require('./router/login'));
+app.use("/",require("./router/register"));
+app.use('/login',require('./router/login'));
  // paypal api 
-  App.use('/pay',require('./router/paypal'));
-  App.use('/ocr',require('./router/OcrModule'));
-  App.use('/wardan',require('./router/wardanApi'));
-  App.use('/personal',require('./router/PersonalInfo'));
-  App.use('/stripe',require('./router/stripepayment'));
-  App.use('/mail',require('./router/MailSender'));
+ app.use('/pay',require('./router/paypal'));
+ app.use('/ocr',require('./router/OcrModule'));
+ app.use('/wardan',require('./router/wardanApi'));
+ app.use('/personal',require('./router/PersonalInfo'));
+ app.use('/stripe',require('./router/stripepayment'));
+ app.use('/mail',require('./router/MailSender'));
 
 //  route not found
-App.use((req,res,next)=>{
+app.use((req,res,next)=>{
     req.status = 404;
     const error = new Error("Route no found");
     next(error);
 });
 //  error handing 
-if(App.get("env")==='production'){
-    App.use((error,req,res,next)=>{
+if(app.get("env")==='production'){
+    app.use((error,req,res,next)=>{
         res.status(req.status || 500).send({
             message:error.message
         });
@@ -65,7 +65,7 @@ if(App.get("env")==='production'){
 }
 
 
-App.use((error,req,res,next)=>{
+app.use((error,req,res,next)=>{
     res.status(req.status || 500).send({
         message:error.message,
         stack:error.stack
@@ -76,6 +76,6 @@ App.use((error,req,res,next)=>{
 
 
 
-App.listen(process.env.PORT || port,function(){
+app.listen(process.env.PORT || port,function(){
     console.log("Server is running")
 })
