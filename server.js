@@ -56,21 +56,21 @@ app.use('/login',require('./router/login'));
 //     next(error);
 // });
 //  error handing 
-if(app.get("env")==='production'){
-    app.use((error,req,res,next)=>{
-        res.status(req.status || 500).send({
-            message:error.message
-        });
-    }); 
-}
+// if(app.get("env")==='production'){
+//     app.use((error,req,res,next)=>{
+//         res.status(req.status || 500).send({
+//             message:error.message
+//         });
+//     }); 
+// }
 
 
-app.use((error,req,res,next)=>{
-    res.status(req.status || 500).send({
-        message:error.message,
-        stack:error.stack
-    });
-});
+// app.use((error,req,res,next)=>{
+//     res.status(req.status || 500).send({
+//         message:error.message,
+//         stack:error.stack
+//     });
+// });
 
 
 
