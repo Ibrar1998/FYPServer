@@ -50,11 +50,11 @@ app.use('/login',require('./router/login'));
  app.use('/mail',require('./router/MailSender'));
 
 //  route not found
-app.use((req,res,next)=>{
-    req.status = 404;
-    const error = new Error("Route no found");
-    next(error);
-});
+// app.use((req,res,next)=>{
+//     req.status = 404;
+//     const error = new Error("Route no found");
+//     next(error);
+// });
 //  error handing 
 if(app.get("env")==='production'){
     app.use((error,req,res,next)=>{
