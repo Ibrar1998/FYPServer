@@ -1,7 +1,8 @@
 const express = require('express');
 const { createWorker ,PSM, OEM } =require('tesseract.js');
 const router = express.Router();
-
+const mongoose=require("mongoose");
+const Verify=mongoose.model("Vehicles");
 const multer=require('multer');
 
 const storage=multer.diskStorage({
@@ -39,8 +40,23 @@ router.post('/upload',upload.single('uploadedImage'),(req,res)=>{
             
           });          //+req.file.filename
         const { data: { text } } = await worker.recognize(path);
-        res.send(text);
-        console.log(text)
+           var test = text.replace(/(\r\n|\n|\r)/gm,""); 
+        
+          
+           const vehicles=await Verify.findOne(      
+        {  
+           //  Numberplate:test
+           Numberplate : {$regex: (test),$options:"$i" } 
+        })
+      
+        if(vehicles){
+            console.log(vehicles)
+        res.send(vehicles);
+        }else{
+            res.send({
+                message:'Vehicle NOT FOUND'
+            })
+        }
         
         await worker.terminate();
       })();  
