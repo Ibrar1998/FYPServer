@@ -1,0 +1,131 @@
+
+const express = require('express');
+
+const stripe = require("stripe")("sk_test_51HqkVCAXTFLHhrkDtmM7mwW3F3Ro8CRPc6dySELxJAoRAGC65Pv0Adfd6ZtAnmGniiGJBIT0o82syPlktUGc4bJn00LidRIHGb");
+const { v4: uuidv4 } = require('uuid');
+const router = express.Router()
+
+const mongoose=require("mongoose");
+const Payment=mongoose.model("Payments");
+
+router.post("/checkout", async (req, res) => {
+    console.log("Request:", req.body);
+   
+    let error;
+    let status;
+    try {
+      const { product, token } = req.body;
+  
+      const customer = await stripe.customers.create({
+        email: req.body.Email,
+        source: token.id
+      });
+  
+      const idempotencyKey = uuidv4();
+      const charge = await stripe.charges.create(
+        {
+          amount: product.price * 100,
+          currency: "usd",
+          customer: customer.id,
+          receipt_email: product.email,
+          description: `Purchased the ${product.name}`,
+          shipping: {
+            name: token.card.name,
+            address: {
+              line1: token.card.address_line1,
+              line2: token.card.address_line2,
+              city: token.card.address_city,
+              country: token.card.address_country,
+              postal_code: token.card.address_zip
+            }
+          }
+        },
+        {
+          idempotencyKey
+        }
+      );
+
+      const payment =new Payment();
+      payment.PayerId=req.body.userid;
+      payment.WardanId=req.body.Data.WardanId;
+      payment.PayerName=req.body.Data.OffenderName;
+      payment.PayerCnic=req.body.Data.OffenderCnic;
+      payment.PayerEmail=req.body.Email;
+      payment.PayerFine=req.body.Data.Fine;
+
+      await payment.save();
+
+      console.log("Charge:", { charge });
+      status = "success";
+
+      
+    } catch (error) {
+      console.error("Error:", error);
+      status = "failure";
+    }
+  
+    res.json({ error, status });   
+   
+  });
+//////////////////////////
+router.post("/webpay", async (req, res) => {
+  console.log("Request:", req.body);
+
+  let error;
+  let status;
+  try {
+    const {Data, token ,userid } = req.body;
+
+    const customer = await stripe.customers.create({
+      email: token.email,
+      source: token.id
+    });
+
+    const idempotencyKey = uuidv4();
+    const charge = await stripe.charges.create(
+      {
+        amount: Data[0].Fine,
+        currency: "usd",
+        customer: customer.id,
+        receipt_email: token.email,
+        description: `Electronic Challan Pay by ${Data[0].OffenderName}`,
+        shipping: {
+          name: token.card.name,
+          address: {
+            line1: token.card.address_line1,
+            line2: token.card.address_line2,
+            city: token.card.address_city,
+            country: token.card.address_country,
+            postal_code: token.card.address_zip
+          }
+        }
+      },
+      {
+        idempotencyKey
+      }
+    );
+
+    const payment =new Payment();
+    payment.PayerId=userid;
+    payment.WardanId=Data[0].WardanId;
+    payment.PayerName=Data[0].OffenderName;
+    payment.PayerCnic=Data[0].OffenderCnic;
+    payment.PayerEmail=token.email;
+    payment.PayerFine=Data[0].Fine;
+
+    await payment.save();
+
+    console.log("Charge:", { charge });
+    status = "success";
+
+    
+  } catch (error) {
+    console.error("Error:", error);
+    status = "failure";
+  }
+
+  res.json({ error, status });   
+
+});
+
+  module.exports = router ;

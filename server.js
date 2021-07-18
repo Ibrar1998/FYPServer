@@ -11,19 +11,22 @@ require("./model/Register");
 require("./model/FeedbackandCompailent");
 require("./model/Vehicles");
 require("./model/Challan");
-const app =express();
+require("./model/Learner");
+require("./model/Payments");
+require("./model/License");
+const App =express();
 const port=7777;
-app.use(cors());
+App.use(cors());
 const engines=require('consolidate');
-app.engine('ejs',engines.ejs);
-app.set('views','./views');
-app.set('view engine','ejs');
+App.engine('ejs',engines.ejs);
+App.set('views','./views');
+App.set('view engine','ejs');
  
 //  image access
-app.use(express.static(__dirname + '/userImage/'));
-app.use(bodyParser.json())
+App.use(express.static(__dirname + '/userImage/'));
+App.use(bodyParser.json())
 .use(morgan())
-app.use(bodyParser.urlencoded({extended:true}));
+App.use(bodyParser.urlencoded({extended:true}));
 
 var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', "*");
@@ -32,32 +35,34 @@ var allowCrossDomain = function(req, res, next) {
     next();
 }
 
-app.use(allowCrossDomain);
+App.use(allowCrossDomain);
 
 
 
 
 
 
-app.use("/",require("./router/register"));
-app.use('/login',require('./router/login'));
+ App.use("/",require("./router/register"));
+ App.use('/login',require('./router/login'));
  // paypal api 
- app.use('/pay',require('./router/paypal'));
- app.use('/ocr',require('./router/OcrModule'));
- app.use('/wardan',require('./router/wardanApi'));
- app.use('/personal',require('./router/PersonalInfo'));
- app.use('/stripe',require('./router/stripepayment'));
- app.use('/mail',require('./router/MailSender'));
-
+  App.use('/pay',require('./router/paypal'));
+  App.use('/ocr',require('./router/OcrModule'));
+  App.use('/wardan',require('./router/wardanApi'));
+  App.use('/personal',require('./router/PersonalInfo'));
+  App.use('/stripe',require('./router/stripepayment'));
+  App.use('/mail',require('./router/MailSender'));
+  App.use('/user',require('./router/User'));
+    App.use('/web',require('./router/WebPaypal'));
+    App.use('/license',require('./router/license'));
 //  route not found
-app.use((req,res,next)=>{
+App.use((req,res,next)=>{
     req.status = 404;
     const error = new Error("Route no found");
     next(error);
 });
 //  error handing 
-if(app.get("env")==='production'){
-    app.use((error,req,res,next)=>{
+if(App.get("env")==='production'){
+    App.use((error,req,res,next)=>{
         res.status(req.status || 500).send({
             message:error.message
         });
@@ -65,7 +70,7 @@ if(app.get("env")==='production'){
 }
 
 
-app.use((error,req,res,next)=>{
+App.use((error,req,res,next)=>{
     res.status(req.status || 500).send({
         message:error.message,
         stack:error.stack
@@ -76,6 +81,6 @@ app.use((error,req,res,next)=>{
 
 
 
-app.listen(process.env.PORT || port,function(){
+App.listen(process.env.PORT || port,function(){
     console.log("Server is running")
 })
