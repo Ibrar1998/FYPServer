@@ -7,11 +7,21 @@ const mongoose=require("mongoose");
 const Verify=mongoose.model("Vehicles");
 const Challan=mongoose.model("Challan");
 const Payment=mongoose.model("Payments");
+const License=mongoose.model("License");
 
 router.post('/license',async(req,res)=>{
-    console.log(req.body);
-   
-        res.send('license');
+     const license=await License.findOne(      
+        {  
+            Cnic : {$regex: req.body.searcrh,$options:"$i" } 
+        })
+        if(license ){
+            console.log(license)
+        res.send(license);
+        }else{
+            res.send({
+                message:'license NOT FOUND'
+            })
+        }
   
     
 })
