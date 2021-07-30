@@ -57,7 +57,8 @@ router.post('/challanList',async(req,res)=>{
     console.log(req.body);
     const list=await Challan.find({
         RegNoOfVehicle:req.body.RegNoOfVehicle,
-        OffenderCnic:req.body.OffenderCnic
+//OffenderCnic:req.body.OffenderCnic
+        Status:'Pending'
     });
     if(list !=''){
         res.send(list);
