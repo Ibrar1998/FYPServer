@@ -67,7 +67,6 @@ router.post('/challanList',async(req,res)=>{
     console.log(req.body);
     const list=await Challan.find({
         RegNoOfVehicle:req.body.RegNoOfVehicle,
-//OffenderCnic:req.body.OffenderCnic
         Status:'Pending'
     });
     if(list !=''){
@@ -82,8 +81,7 @@ router.post('/challanList',async(req,res)=>{
 router.post('/webchallanlist',async(req,res)=>{
     console.log(req.body);
     const list=await Challan.find({
-        RegNoOfVehicle:req.body.RegNoOfVehicle,
-         OffenderCnic:req.body.OffenderCnic,
+        RegNoOfVehicle:req.body.RegNoOfVehicle
       
     });
     if(list !=''){
