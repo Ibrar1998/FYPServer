@@ -78,6 +78,22 @@ router.post('/challanList',async(req,res)=>{
         })
     } 
 });
+
+router.post('/webchallanlist',async(req,res)=>{
+    console.log(req.body);
+    const list=await Challan.find({
+        RegNoOfVehicle:req.body.RegNoOfVehicle,
+         OffenderCnic:req.body.OffenderCnic,
+      
+    });
+    if(list !=''){
+        res.send(list);
+    }else{
+        res.send({
+            message:'No Challan Found!!'
+        })
+    } 
+});
 router.get('/challanList',async(req,res)=>{
     const list=await Challan.find({});
     if(list !=''){
