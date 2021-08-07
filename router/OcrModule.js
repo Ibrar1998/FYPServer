@@ -20,7 +20,7 @@ const storage=multer.diskStorage({
 const upload=multer({storage:storage});
 
 
-router.post('/upload',upload.single('uploadedImage'),(req,res)=>{
+router.post('/upload',upload.single('file'),(req,res)=>{
 
     console.log(req.file);
     const path= './uploads/'+req.file.originalname;
@@ -61,17 +61,13 @@ router.post('/upload',upload.single('uploadedImage'),(req,res)=>{
             })
         }
 
-       // searching end
-       // res.send(text);
+
      
         
         await worker.terminate();
       })();  
 }); 
 
-router.post('/manual',(req,res)=>{
-      console.log(req.body);
-      res.send(200);
-})
+
 
 module.exports=router;
