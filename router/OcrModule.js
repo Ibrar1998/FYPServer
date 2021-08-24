@@ -61,13 +61,15 @@ router.post('/upload',upload.single('file'),(req,res)=>{
             })
         }
 
-
      
         
         await worker.terminate();
       })();  
 }); 
 
-
+router.post('/manual',(req,res)=>{
+      console.log(req.body);
+      res.send(200);
+})
 
 module.exports=router;

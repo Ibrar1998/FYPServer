@@ -26,8 +26,8 @@ router.post("/paypal", (req, res) => {
             payment_method: "paypal"
         },
         redirect_urls: { //http://192.168.0.111:7777/pay/succes
-            return_url: `http://localhost:3001/PayChallan?_id=${Data[0]._id}`,
-            cancel_url: "http://192.168.0.111:7777/pay/cancel"
+            return_url: `http://localhost:3000/Paypal?ChallanId=${Data._id}`,
+            cancel_url: "http://192.168.0.104:7777/pay/cancel"
         },
         transactions: [
             {
@@ -35,7 +35,7 @@ router.post("/paypal", (req, res) => {
                     items: [ 
                         {
                             name: "Online Challan",
-                            price: Data[0].Fine,
+                            price: Data.Fine,
                             currency: "USD",
                             quantity: 1
                         }
@@ -43,7 +43,8 @@ router.post("/paypal", (req, res) => {
                 },
                 amount: {
                     currency: "USD",
-                    total: Data[0].Fine
+                    total: Data.Fine
+                 
                 },
                 description: "Electronic Challan Islamabad Traffic Police"
             }

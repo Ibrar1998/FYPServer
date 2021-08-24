@@ -7,7 +7,7 @@ const License=mongoose.model("License");
 
 router.post('/createlicense',async(req,res)=>{
     console.log(req.body);
-
+    console.log(req.body.UserId);
     const  license = new License();
     license.UserId=req.body.UserId;
     license.Status=req.body.Status;
@@ -20,7 +20,12 @@ router.post('/createlicense',async(req,res)=>{
 
 router.get('/:LicenseID',async(req,res)=>{
     console.log(req.params.LicenseID);
-    const validLicense=await License.findOne({UserId:req.params.LicenseID});
+    const validLicense=await License.find({UserId:req.params.LicenseID});
+    res.send(validLicense);
+});
+router.get('/id/:LicenseID',async(req,res)=>{
+    console.log(req.params.LicenseID);
+    const validLicense=await License.findOne({_id:req.params.LicenseID});
     res.send(validLicense);
 });
 router.get('/',async(req,res)=>{
@@ -54,7 +59,7 @@ router.post('/LicenseTest',async(req,res)=>{
                     {returnNewDocument: true,useFindAndModify:false}
     ) 
     if(IsUpdated){
-        res.send(200);
+        res.sendStatus(200);
     }
    
 });

@@ -8,9 +8,10 @@ const Verify=mongoose.model("Vehicles");
 const Challan=mongoose.model("Challan");
 const Payment=mongoose.model("Payments");
 const License=mongoose.model("License");
-
 router.post('/license',async(req,res)=>{
-     const license=await License.findOne(      
+    console.log(req.body);
+   
+    const license=await License.findOne(      
         {  
             Cnic : {$regex: req.body.searcrh,$options:"$i" } 
         })
@@ -77,12 +78,11 @@ router.post('/challanList',async(req,res)=>{
         })
     } 
 });
-
 router.post('/webchallanlist',async(req,res)=>{
     console.log(req.body);
-    const list=await Challan.find({
-        RegNoOfVehicle:req.body.RegNoOfVehicle
-      
+    const list=await Challan.findOne({
+        RegNoOfVehicle:req.body.RegNoOfVehicle    ,
+        Status:'Pending'  
     });
     if(list !=''){
         res.send(list);
@@ -129,5 +129,30 @@ router.get('/Payments',async(req,res)=>{
         })
     } 
     
+})
+router.put("/update/:postid",async (req,res)=>{
+
+    
+    const challan=await Challan.findByIdAndUpdate({
+        _id:req.params.postid},
+        req.body,{
+            new:true,
+            runValidators:true,useFindAndModify:false
+    })
+    res.send(challan)
+})
+router.delete("/del/:postid",async (req,res)=>{
+    console.log(req.params.postid)
+    const challan= await Challan.findByIdAndRemove({
+        _id:req.params.postid
+        
+    },{useFindAndModify:false});
+
+    res.send(challan);
+})
+router.get('/:id',async(req,res)=>{
+    console.log(req.params)
+    const challan= await Challan.findOne({  _id:req.params.id });
+        res.send(challan);
 })
 module.exports=router;

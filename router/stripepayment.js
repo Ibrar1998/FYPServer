@@ -84,11 +84,11 @@ router.post("/webpay", async (req, res) => {
     const idempotencyKey = uuidv4();
     const charge = await stripe.charges.create(
       {
-        amount: Data[0].Fine,
+        amount: Data.Fine,
         currency: "usd",
         customer: customer.id,
         receipt_email: token.email,
-        description: `Electronic Challan Pay by ${Data[0].OffenderName}`,
+        description: `Electronic Challan Pay by ${Data.OffenderName}`,
         shipping: {
           name: token.card.name,
           address: {
@@ -107,11 +107,11 @@ router.post("/webpay", async (req, res) => {
 
     const payment =new Payment();
     payment.PayerId=userid;
-    payment.WardanId=Data[0].WardanId;
-    payment.PayerName=Data[0].OffenderName;
-    payment.PayerCnic=Data[0].OffenderCnic;
+    payment.WardanId=Data.WardanId;
+    payment.PayerName=Data.OffenderName;
+    payment.PayerCnic=Data.OffenderCnic;
     payment.PayerEmail=token.email;
-    payment.PayerFine=Data[0].Fine;
+    payment.PayerFine=Data.Fine;
 
     await payment.save();
 
