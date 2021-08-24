@@ -24,8 +24,8 @@ router.get("/paypal", (req, res) => {
             payment_method: "paypal"
         },
         redirect_urls: {
-            return_url: "http://192.168.0.110:7777/pay/success",
-            cancel_url: "http://192.168.0.110:7777/pay/cancel"
+            return_url: "https://trafficappserver.herokuapp.com/pay/success",
+            cancel_url: "https://trafficappserver.herokuapp.com/pay/cancel"
         },
         transactions: [
             {
