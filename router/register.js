@@ -39,28 +39,30 @@ router.post("/register",async (req,res)=>{
             res.send(post);
  })
 
- /*
+router.put("/register/:postid",async (req,res)=>{
 
- router.put("/register/:postid",async (req,res)=>{
-
-    
-        const post=await Post.findByIdAndUpdate({
-            _id:req.params.postid},
-            req.body,{
-                new:true,
-                runValidators:true
-        })
-        res.send(post)
- })
+    console.log(req.params.postid);
+    await Post.findByIdAndUpdate({
+        _id:req.params.postid},
+        req.body,{
+            new:true,
+            runValidators:true,useFindAndModify:false
+    })
+    res.send(200);
+})
 
  router.delete("/register/:postid",async (req,res)=>{
 
-        const post= await Post.findByIdAndRemove({
+        console.log(req.params.postid);
+         await Post.findByIdAndRemove({
             _id:req.params.postid
-        });
-        res.send(post);
+            
+        },{useFindAndModify:false});
+    
+        res.sendStatus(200);
 })
-*/
+
+
 
 
 
