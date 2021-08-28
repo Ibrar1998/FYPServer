@@ -18,8 +18,23 @@ router.post("/register",async (req,res)=>{
 
     console.log(req.body)
     
-       const post=new Post();
-
+       const cnic=await Post.findOne({Cnic:req.body.Cnic});
+       const email=await Post.findOne({Email:req.body.Email});
+       if(cnic){
+           res.send({
+               message:'Cnic Already Exit!'
+             
+           })
+           return
+       }
+       if(email){
+        res.send({
+            message:'Email Already Exit!'
+        })
+        return
+    }
+    else{
+               const post=new Post();
     post.Email=req.body.Email;
    post.Cnic=req.body.Cnic;
     post.Username=req.body.Username;
@@ -27,7 +42,10 @@ router.post("/register",async (req,res)=>{
     post.Role=req.body.Role;
 
     await post.save(); 
-          res.send(200);
+          res.sendStatus(200);
+    }   
+
+         
          
 
          
@@ -48,7 +66,7 @@ router.put("/register/:postid",async (req,res)=>{
             new:true,
             runValidators:true,useFindAndModify:false
     })
-    res.send(200);
+    res.sendStatus(200);
 })
 
  router.delete("/register/:postid",async (req,res)=>{
