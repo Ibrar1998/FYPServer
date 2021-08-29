@@ -38,7 +38,7 @@ router.post("/",upload.single('userimage'), async(req,res)=>{
                     await  User.findOneAndUpdate(
                         {_id:req.body.id},
                         {
-                             UserImage:req.file.filename
+                             UserImage:req.file.originalname
                         },
                         {returnNewDocument: true,useFindAndModify:false}
                     )
