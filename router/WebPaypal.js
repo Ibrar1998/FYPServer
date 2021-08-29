@@ -26,7 +26,7 @@ router.post("/paypal", (req, res) => {
             payment_method: "paypal"
         },
         redirect_urls: { //http://192.168.0.111:7777/pay/succes
-            return_url: `https://trafficappserver.herokuapp.com/Paypal?ChallanId=${Data._id}`,
+            return_url: `https://islambadtrafficpolice.herokuapp.com/Paypal?ChallanId=${Data._id}`,
             cancel_url: "https://trafficappserver.herokuapp.com/pay/cancel"
         },
         transactions: [

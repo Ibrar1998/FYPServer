@@ -18,6 +18,8 @@ router.post("/register",async (req,res)=>{
 
     console.log(req.body)
     
+      
+
        const cnic=await Post.findOne({Cnic:req.body.Cnic});
        const email=await Post.findOne({Email:req.body.Email});
        if(cnic){
@@ -42,10 +44,11 @@ router.post("/register",async (req,res)=>{
     post.Role=req.body.Role;
 
     await post.save(); 
-          res.sendStatus(200);
+          res.send({
+              message:'OK'
+          });
     }   
 
-         
          
 
          
@@ -57,6 +60,7 @@ router.post("/register",async (req,res)=>{
             res.send(post);
  })
 
+ 
 router.put("/register/:postid",async (req,res)=>{
 
     console.log(req.params.postid);
@@ -79,7 +83,6 @@ router.put("/register/:postid",async (req,res)=>{
     
         res.sendStatus(200);
 })
-
 
 
 

@@ -53,9 +53,47 @@ router.get('/:learnerId',async(req,res)=>{
     }
     
 });
+//
+router.put("/learnerUpdate/:postid",async (req,res)=>{
+
+    console.log(req.params.postid);
+    await Learner.findByIdAndUpdate({
+        _id:req.params.postid},
+        req.body,{
+            new:true,
+            runValidators:true,useFindAndModify:false
+    })
+    res.sendStatus(200);
+})
+
+ router.delete("/learnerDelete/:postid",async (req,res)=>{
+
+        console.log(req.params.postid);
+         await Learner.findByIdAndRemove({
+            _id:req.params.postid
+            
+        },{useFindAndModify:false});
+    
+        res.sendStatus(200);
+})
+
+
+//
 router.get('/',async(req,res)=>{
     const validleaner=await Learner.find({});
     res.send(validleaner);
+});
+router.get('/getvalidleaner/:learnerId',async(req,res)=>{
+    console.log(req.params.learnerId);
+    const validleaner=await Learner.findOne({UserId:req.params.learnerId});
+    if(validleaner){
+        res.send(validleaner);
+    }else{
+        res.send({
+            message:'Not Found'
+        })
+    }
+    
 });
 
 router.post('/jazzcash',async(req,res)=>{
